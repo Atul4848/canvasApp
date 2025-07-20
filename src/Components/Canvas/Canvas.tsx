@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { CanvasElement, DrawingTool } from '../../Interfaces'; 
-import CanvasElementRenderer from './CanvasElementRender'; 
+import { CanvasElement, DrawingTool } from '../../Interfaces';
+import CanvasElementRenderer from './CanvasElementRender';
 import useCanvasInteraction from '../../Hooks/useCanvasInteraction';
 
 interface CanvasProps {
@@ -26,7 +26,7 @@ const Canvas: React.FC<CanvasProps> = ({
   currentTool,
   onAddElement,
 }) => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null); 
   const drawingAreaRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -52,7 +52,7 @@ const Canvas: React.FC<CanvasProps> = ({
       onMouseDown={handleCanvasMouseDown}
     >
       <div
-        ref={drawingAreaRef}
+        ref={drawingAreaRef} // Attach ref to the inner drawing area
         className="bg-white border border-gray-700 relative shadow-lg"
         style={{
           width: canvasWidth * zoom,
@@ -71,6 +71,7 @@ const Canvas: React.FC<CanvasProps> = ({
             isSelected={selectedElementId === element!.id && !element!.id.startsWith('preview-')}
             zoom={zoom}
             onMouseDown={handleElementMouseDown}
+            currentTool={currentTool}
           />
         ))}
       </div>

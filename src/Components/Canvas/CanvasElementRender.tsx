@@ -1,14 +1,15 @@
 import React from 'react';
-import { CanvasElement } from '../../Interfaces';
+import { CanvasElement, DrawingTool } from '../../Interfaces';
 
 interface CanvasElementRendererProps {
   element: CanvasElement;
   isSelected: boolean;
   zoom: number;
   onMouseDown: (e: React.MouseEvent, element: CanvasElement) => void;
+  currentTool: DrawingTool;
 }
 
-const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, isSelected, zoom, onMouseDown }) => {
+const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, isSelected, zoom, onMouseDown, currentTool }) => {
   const getResizeHandleStyle = (handle: string) => {
     const size = 8;
     const offset = -size / 2;
@@ -52,6 +53,8 @@ const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, 
     return style;
   };
 
+  const disablePointerEvents = currentTool !== 'select' && !element.id.startsWith('preview-');
+
   if (element.type === 'line' && element.startX !== undefined && element.startY !== undefined && element.endX !== undefined && element.endY !== undefined) {
     const x1 = element.startX * zoom;
     const y1 = element.startY * zoom;
@@ -64,9 +67,13 @@ const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, 
         className={`absolute overflow-visible ${isSelected ? 'border-2 border-red-500' : ''} canvas-element`}
         style={{
           left: 0, top: 0, width: '100%', height: '100%',
-          pointerEvents: 'auto',
+          pointerEvents: disablePointerEvents ? 'none' : 'auto',
         }}
-        onMouseDown={(e) => onMouseDown(e, element)}
+        onMouseDown={(e) => {
+          if (!disablePointerEvents) {
+            onMouseDown(e, element);
+          }
+        }}
       >
         <line
           x1={x1}
@@ -78,7 +85,7 @@ const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, 
           strokeDasharray={element.lineStyle === 'dashed' ? '5,5' : '0'}
           style={{
             opacity: element.opacity || 1,
-            cursor: 'grab',
+            cursor: disablePointerEvents ? 'default' : 'grab', 
           }}
         />
         {isSelected && (
@@ -93,7 +100,7 @@ const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, 
     return (
       <div
         key={element.id}
-        className={`absolute canvas-element ${isSelected ? 'border-2 border-red-500' : ''} cursor-grab`}
+        className={`absolute canvas-element ${isSelected ? 'border-2 border-red-500' : ''}`}
         style={{
           left: element.x * zoom,
           top: element.y * zoom,
@@ -109,8 +116,14 @@ const CanvasElementRenderer: React.FC<CanvasElementRendererProps> = ({ element, 
           opacity: element.opacity || 1,
           border: (element.type === 'rectangle' || element.type === 'circle') && element.lineColor && element.lineWidth ? `${element.lineWidth * zoom}px ${element.lineStyle || 'solid'} ${element.lineColor}` : 'none',
           borderStyle: element.lineStyle === 'dashed' ? 'dashed' : 'solid',
+          pointerEvents: disablePointerEvents ? 'none' : 'auto',
+          cursor: disablePointerEvents ? 'default' : 'grab',
         }}
-        onMouseDown={(e) => onMouseDown(e, element)}
+        onMouseDown={(e) => {
+          if (!disablePointerEvents) {
+            onMouseDown(e, element);
+          }
+        }}
       >
         {element.type === 'text' && (
           <div
