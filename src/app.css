@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+.sidebar {
+  width: 260px;
+  padding: 10px;
+  background-color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-group {
+  margin-bottom: 10px;
+}
+
+.control-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.btn-group button,
+.grid-buttons button,
+.footer-controls button {
+  margin: 2px;
+}
+
+.canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  color: #000;
+}
+
+.canvas-inner {
+  width: 500px;
+  height: 500px;
+  border: 2px solid #ccc;
+  position: relative;
+}
+
+.text-box {
+  position: absolute;
+  top: 140px;
+  left: 140px;
+  width: 200px;
+  height: 100px;
+  border: 2px dashed red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.footer-controls {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
